@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Projects</title>
+    <link href='dpstylesheet.css' rel='stylesheet'>
+    <link href='./prism.css' rel='stylesheet'>
+    <script src="./prism.js"></script>
+
+    <style>
+        /* Limit the width of the code snippet box */
+        pre.language-matlab, pre.language-python, pre.language-markup {
+          max-width: 800px; /* Adjust the width as needed */
+          margin: 0 auto;
+        }
+    
+        /* Adjust the font size of the code inside the snippet box */
+        code.language-matlab, code.language-python, code.language-markup {
+          font-size: 14px; /* Adjust the font size as needed */
+        }
+      </style>
+</head>
+
+
+<body>
+    <div id = 'toolbar'>
+        <a href="./dphome.html"><span class="toolleft">Manuel Avila</span></a>
+        <a href="./dpabout.html"><span class="toolright">About Me</span></a>
+        <a href="./dpprojects.html"><span class="toolright">Projects</span></a>
+        <a href="./dpcontactme.html"><span class="toolright">Contact</span></a>
+    </div>
+
+    <h1 id="contact_title">My Projects</h1>
+
+    <div id="projects">
+        <div class="myprojects">
+            <h2>MATLAB</h2>
+
+            <pre><code class="language-matlab">
+                biochemistry = xptread('BIOPRO_H.XPT');
+                body_measures = xptread('BMX_H.XPT');
+                blood_cell_count = xptread('CBC_H.XPT');
+                demo = xptread('DEMO_H.XPT');
+
+                % Change used table column names to make it readable
+                blood_cell_count.Properties.VariableNames{'LBXRBCSI'} = 'RBC Count';
+                blood_cell_count.Properties.VariableNames{'LBXHGB'} = 'Hemoglobin Conc';
+                body_measures.Properties.VariableNames{'BMXBMI'} = 'BMI';
+                demo.Properties.VariableNames{'RIDAGEYR'} = 'Age';
+                biochemistry.Properties.VariableNames{'LBXSCK'} = 'Creatine Phosphokinase Conc';
+                biochemistry.Properties.VariableNames{'LBXSGL'} = 'Glucose Conc';
+                biochemistry.Properties.VariableNames{'LBXSPH'} = 'Phosphorus Conc';
+                biochemistry.Properties.VariableNames{'LBXSTP'} = 'Protein Conc';
+
+                % Initializing and scrubbing the table including RBC count and BMI for each subject
+                joined_table = innerjoin(blood_cell_count,body_measures,'Keys','SEQN');
+                jt_small = joined_table(:,{'RBC Count','BMI'});
+                jt_cleaned = rmmissing(jt_small);
+
+                % Create the linear regression
+                mdl = stepwiselm(jt_cleaned,'ResponseVar','RBC Count','PredictorVars','BMI');
+
+                % Plot the linear regression
+                plot(mdl)
+                xlabel('BMI (kg/m^2)')
+                ylabel('Red Blood Cell Count (million cells / uL)')
+                title('Effect of BMI on RBC Count')
+                display(mdl)
+
+                % Test the statistical significance of BMI as a predictor of RBC count
+                a = 0.05;
+                dof_big = mdl.DFE;
+                t_original = mdl.Coefficients.tStat(2);
+                tc = icdf('t', 1 - a/2, dof_big);
+
+                fprintf(['Since the t-stat of BMI %.3f falls outside of the reject domain (t < %.3f and t > %.3f), BMI is statistically significant in predicting RBC count'],t_original,-tc,tc)
+            </code></pre>   
+
+        </div>
+        <div class="myprojects">
+            <h2>Python</h2>
+
+            <pre><code class="language-python">
+                # I have included snippets of code from the experiment I created while working with the research team at Vanderbilt, which I mentioned in the 'About Me' section of my webpage
+                # in this example, you can see all the imports at the beginning of my code, which I completed with the help of Psychopy, a tool that makes it easier to create
+                # timed audio/visual stimuli. Right under all of the imports, you can see an LSL pipeline that I established to send triggers to the EEG system, which would give 
+                # us an idea as to when, in time, the participant responded to the stimuli presented. 
+
+                from psychopy import locale_setup
+                from psychopy import prefs
+                from psychopy import sound, gui, visual, core, data, event, logging, clock, colors, layout
+                from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED,
+                                                STOPPED, FINISHED, PRESSED, RELEASED, FOREVER)
+
+                import numpy as np  # whole numpy lib is available, prepend 'np.'
+                from numpy import (sin, cos, tan, log, log10, pi, average,
+                                sqrt, std, deg2rad, rad2deg, linspace, asarray)
+                from numpy import random
+                import os  # handy system and path functions
+                import sys  # to get file system encoding
+                import time
+
+                from pylsl import StreamInfo, StreamOutlet
+
+                import psychopy.iohub as io
+                from psychopy.hardware import keyboard
+
+                # introducing LSL pipeline that will send triggers to EEG system
+                info = StreamInfo(name='EventStream', type='Markers', channel_count=1, nominal_srate=1,
+                                    channel_format= 'int32', source_id='wallacelab')
+                outlet = StreamOutlet(info)
+
+
+                # below, you can see an example of an audio stimuli consisting of repeated beeps that I defined as a function. Psychopy created most of the
+                # code within the function and I added the trigger code towards the end of the 'run' section of the code.
+
+                def aud_rep():
+                    # ------Prepare to start Routine "auditory_repetition"-------
+                    white_cross.setAutoDraw(True)    
+                    continueRoutine = True
+                    routineTimer.add(2.500000)
+                    # update component parameters for each repeat
+                    rep_50.setSound('ba_500ms.wav', secs=0.5)
+                    rep_50.setVolume(1, log=False)
+                    rep_50_2.setSound('ba_500ms.wav', secs=0.5)
+                    rep_50_2.setVolume(1, log=False)
+                    response_rep.keys = []
+                    response_rep.rt = []
+                    _response_rep_allKeys = []
+                    # keep track of which components have finished
+                    auditory_repetitionComponents = [rep_50, rep_50_2, response_rep, white_cross]
+                    for thisComponent in auditory_repetitionComponents:
+                        thisComponent.tStart = None
+                        thisComponent.tStop = None
+                        thisComponent.tStartRefresh = None
+                        thisComponent.tStopRefresh = None
+                        if hasattr(thisComponent, 'status'):
+                            thisComponent.status = NOT_STARTED
+                    # reset timers
+                    t = 0
+                    _timeToFirstFrame = win.getFutureFlipTime(clock="now")
+                    auditory_repetitionClock.reset(-_timeToFirstFrame)  # t0 is time of first possible flip
+                    frameN = -1
+                    outlet.push_sample([1])
+                    # -------Run Routine "auditory_repetition"-------
+                    while continueRoutine and routineTimer.getTime() > 0:
+                        # get current time
+                        t = auditory_repetitionClock.getTime()
+                        tThisFlip = win.getFutureFlipTime(clock=auditory_repetitionClock)
+                        tThisFlipGlobal = win.getFutureFlipTime(clock=None)
+                        frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
+                        # update/draw components on each frame
+                        # start/stop rep_50
+                        if rep_50.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                            # keep track of start time/frame for later
+                            rep_50.frameNStart = frameN  # exact frame index
+                            rep_50.tStart = t  # local t and not account for scr refresh
+                            rep_50.tStartRefresh = tThisFlipGlobal  # on global time
+                            rep_50.play(when=win)  # sync with win flip
+                        if rep_50.status == STARTED:
+                            # is it time to stop? (based on global clock, using actual start)
+                            if tThisFlipGlobal > rep_50.tStartRefresh + 0.5-frameTolerance:
+                                # keep track of stop time/frame for later
+                                rep_50.tStop = t  # not accounting for scr refresh
+                                rep_50.frameNStop = frameN  # exact frame index
+                                win.timeOnFlip(rep_50, 'tStopRefresh')  # time at next scr refresh
+                                rep_50.stop()
+                        # start/stop rep_50_2
+                        if rep_50_2.status == NOT_STARTED and tThisFlip >= 1.0-frameTolerance:
+                            # keep track of start time/frame for later
+                            rep_50_2.frameNStart = frameN  # exact frame index
+                            rep_50_2.tStart = t  # local t and not account for scr refresh
+                            rep_50_2.tStartRefresh = tThisFlipGlobal  # on global time
+                            rep_50_2.play(when=win)  # sync with win flip
+                        if rep_50_2.status == STARTED:
+                            # is it time to stop? (based on global clock, using actual start)
+                            if tThisFlipGlobal > rep_50_2.tStartRefresh + 0.5-frameTolerance:
+                                # keep track of stop time/frame for later
+                                rep_50_2.tStop = t  # not accounting for scr refresh
+                                rep_50_2.frameNStop = frameN  # exact frame index
+                                win.timeOnFlip(rep_50_2, 'tStopRefresh')  # time at next scr refresh
+                                rep_50_2.stop()
+                        # *response_rep* updates
+                        waitOnFlip = False
+                        if response_rep.status == NOT_STARTED and tThisFlip >= 0.0-frameTolerance:
+                            # keep track of start time/frame for later
+                            response_rep.frameNStart = frameN  # exact frame index
+                            response_rep.tStart = t  # local t and not account for scr refresh
+                            response_rep.tStartRefresh = tThisFlipGlobal  # on global time
+                            win.timeOnFlip(response_rep, 'tStartRefresh')  # time at next scr refresh
+                            response_rep.status = STARTED
+                            # keyboard checking is just starting
+                            waitOnFlip = True
+                            win.callOnFlip(response_rep.clock.reset)  # t=0 on next screen flip
+                            win.callOnFlip(response_rep.clearEvents, eventType='keyboard')  # clear events on next screen flip
+                        if response_rep.status == STARTED:
+                            # is it time to stop? (based on global clock, using actual start)
+                            if tThisFlipGlobal > response_rep.tStartRefresh + 2.5-frameTolerance:
+                                # keep track of stop time/frame for later
+                                response_rep.tStop = t  # not accounting for scr refresh
+                                response_rep.frameNStop = frameN  # exact frame index
+                                win.timeOnFlip(response_rep, 'tStopRefresh')  # time at next scr refresh
+                                response_rep.status = FINISHED
+                        if response_rep.status == STARTED and not waitOnFlip:
+                            theseKeys = response_rep.getKeys(keyList=['1'], waitRelease=False)
+                            outlet.push_sample([4])
+                            _response_rep_allKeys.extend(theseKeys)
+                            if len(_response_rep_allKeys):
+                                response_rep.keys = _response_rep_allKeys[-1].name  # just the last key pressed
+                                response_rep.rt = _response_rep_allKeys[-1].rt
+                                # a response ends the routine
+                                continueRoutine = False
+                        
+                        # check for quit (typically the Esc key)
+                        if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
+                            core.quit()
+                                    
+                        # refresh the screen
+                        if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+                            win.flip()
+
+                    # -------Ending Routine "auditory_repetition"-------
+                    rep_50.stop()  # ensure sound has stopped at end of routine
+                    thisExp.addData('rep_50.started', rep_50.tStartRefresh)
+                    thisExp.addData('rep_50.stopped', rep_50.tStopRefresh)
+                    rep_50_2.stop()  # ensure sound has stopped at end of routine
+                    thisExp.addData('rep_50_2.started', rep_50_2.tStartRefresh)
+                    thisExp.addData('rep_50_2.stopped', rep_50_2.tStopRefresh)
+
+                    # check responses
+                    if response_rep.keys in ['', [], None]:  # No response was made
+                        response_rep.keys = None
+                    thisExp.addData('response_rep.keys',response_rep.keys)
+                    if response_rep.keys != None:  # we had a response
+                        thisExp.addData('response_rep.rt', response_rep.rt)
+                    thisExp.addData('response_rep.started', response_rep.tStartRefresh)
+                    thisExp.addData('response_rep.stopped', response_rep.tStopRefresh)
+                    thisExp.nextEntry()
+
+                    # here, I am actually running the functions at random: either auditory alternation, auditory repetition, or auditory attention using a while loop that 
+                    # randomizes the order of presentation
+                    instructions()
+                    practice_trials()
+                    n = 0
+                    for i in range(200):
+                        n += 1
+                        if n== 5 or n == 10 or n == 18 or n == 25 or n == 33 or n == 41 or n == 49 or n == 58 or n == 64 or n == 71 or n == 77 or n == 88 or n == 98 or n == 106 or n == 116 or n == 126 or n == 135 or n == 143 or n == 155 or n == 168:
+                            aud_alt()
+                        elif n == 14 or n == 36 or n == 53 or n == 73 or n == 92 or n == 111 or n == 128 or n == 131 or n == 146 or n == 157:
+                            aud_att()
+                        else:
+                            aud_rep()
+
+
+                </code></pre>
+            
+
+        </div>
+        <div class="myprojects">
+            <h2>SOLIDWORKS</h2>
+
+
+        </div>
+        <div class="myprojects">
+            <h2>Web Development</h2>
+
+            <p id="webdevintro">Below, I have provided the code I used to create the 'About Me' section of this digital portfolio.</p>
+
+            <pre><code class="language-markup">
+                &lt;!DOCTYPE html&gt;
+                &lt;html&gt;
+
+                &lt;head&gt;
+                    &lt;title&gt;About Me&lt;/title&gt;
+                    &lt;link href='dpstylesheet.css' rel='stylesheet'&gt;
+                &lt;/head&gt;
+
+
+                &lt;body&gt;
+                    &lt;div id = 'toolbar'&gt;
+                        &lt;a href="./dphome.html"&gt;&lt;span class="toolleft"&gt;Manuel Avila&lt;/span&gt;&lt;/a&gt;
+                        &lt;a href="./dpabout.html"&gt;&lt;span class="toolright"&gt;About Me&lt;/span&gt;&lt;/a&gt;
+                        &lt;a href="./dpprojects.html"&gt;&lt;span class="toolright"&gt;Projects&lt;/span&gt;&lt;/a&gt;
+                        &lt;a href="./dpcontactme.html"&gt;&lt;span class="toolright"&gt;Contact&lt;/span&gt;&lt;/a&gt;
+                    &lt;/div&gt;
+                    
+                    &lt;div class="about-me"&gt;
+
+                    &lt;h1 id="passion-title"&gt;What drives me?&lt;/h1&gt;
+
+                    &lt;img src="Potrait.jpg" width="400", height="500"/&gt;
+
+                        &lt;p&gt;In 2001, I was born with sensorineural hearing loss on my right ear, which introduced me to hearing aids early on. Being hearing impaired
+                            has sparked an interest in me to aid the hearing impaired community with the goal of improving upon existing aiding technology and ensuring
+                            that people like me experience their best lives possible. But more generally, I am drawn to working behind medical device production, manufacturing,
+                            and design because I have always been a hands-on individual and I am amazed at the impact one can bring to patients' lives by doing this. Therefore,
+                            my goal is to work in industry to learn more about this process and gain experience in the field.&lt;/p&gt;
+
+                        &lt;p&gt;With these goals in mind, I have built experience in 3D prototyping and modeling using SOLIDWORKS as well as programming with Python and MATLAB (you can
+                            take a look at some of the projects I have completed by clicking on the 'Projects' tab). For instance, last summer, I worked with a research team at
+                            Vanderbilt University's Medical Center in analyzing cochlear implant users' multisensory integration abilities when presented with audiovisual
+                            stimuli at varying signal-to-noise ratios. I was responsible for designing the Python-based experiment that presented the stimuli to our participants.&lt;/p&gt;
+
+                        &lt;p&gt;But what really drives me deep down is my hunger for a happy, independent life where I know that I have tried my best to be the best version of myself.&lt;/p&gt;
+
+                    &lt;h1 id="background-title"&gt;Born in the US, Venezuelan origin&lt;/h1&gt;
+                        &lt;p&gt;For most of my life, I have lived in Miami, FL, but most of my family is Venezuelan, including my parents. I love spending time at the beach,
+                            relaxing and being by the water with my friends and family. I also love the culture there, full of diversity and people from all over
+                            the globe. One of my main hobbies, in fact, is learning new languages and traveling because I find it so important to get to know the
+                            world around us as much as possible before our time is over. I currently speak English, Spanish, Portuguese, and French but I hope to 
+                            keep the list expanding! I have thankfully had the opportunity to travel to Europe, South America, and Africa.&lt;/p&gt;
+
+                        &lt;p&gt;Some of my other pastimes include playing tennis, spending times socializing with those I love, and recently, I discovered that I like photography.
+                            I really enjoy taking pictures that will help me cherish that moment for the rest of my life and that I could look back to whenever I want to
+                            take a trip down memory lane. Eventually, with this website, I hope to share some of my language-learning tips with you all because 
+                            I feel that I have a great way of memorizing and learning the grammar behind a language, which I firmly believe is the
+                            hardest part about learning a language.&lt;/p&gt;
+
+                    &lt;h1 id="study_abroad"&gt;Love to travel...&lt;/h1&gt;
+                        &lt;p&gt;As I mentioned above, traveling is one of my main hobbies, and luckily enough, this past semester I had the privilege to study abroad in Madrid. 
+                            It was truly an unforgettable experience and one that I would love to relive. I got to visit many countries and learn a lot about a variety of cultures
+                            and the European lifestyle, and thankfully got the chance to practice my Portuguese and French.&lt;/p&gt;
+
+                    &lt;div class="abroad_slideshow"&gt;
+                        &lt;div class="abroadpics"&gt;
+                            &lt;img src="Ponte Vecchio.jpeg" alt="Ponte Vecchio, Florence"&gt;
+                            &lt;img src="Colosseum.jpeg" alt="Rome, Italy"&gt;
+                            &lt;img src="Alhambra.JPG" alt="Granada, Spain"&gt;
+                            &lt;img src="Malta.jpeg" alt="Gaza, Malta"&gt;
+                            &lt;img src="Chamonix.jpeg" alt="Chamonix, France"&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;div class="languagelearning"&gt;
+                        &lt;h1 id="languages"&gt;Mastering Language-Learning&lt;/h1&gt;
+                            &lt;p&gt;Languages are the keys into the souls of cultures and other countries, and more importantly, they can expose an individual to a multitude of professional
+                                opportunities across the globe. This perfectly ties into one of my favorite language-learning quotes from a Chinese proverb:&lt;/p&gt;
+                                
+                            &lt;p id="chineseproverb"&gt;"To learn a language is to have one more windown from which to look at the world."&lt;/p&gt;
+
+                            &lt;p&gt;But more important than learning languages is mastering the methods or ways in which we learn them; by doing so, one can greatly reduce the amount of time it takes
+                                to reach a sufficiently advanced and proficient level. One of my main objectives along this path is to formulate a series of steps that will work for any individual,
+                                regardless of learning styles or focusing capabilites. This is why I have made the effort to compile the language-learning strategies that have worked best for me and that
+                                and that have helped me reach level B1/B2 French and Portuguese in only three months. Best yet? It's completely free. Feel free to send me an email if you are interested in 
+                                learning more about mastering the language-learning process.&lt;/p&gt;
+                    &lt;/div&gt;
+
+
+                    &lt;/div&gt;
+                    
+                &lt;/body&gt;
+
+                &lt;/html&gt;
+            </code></pre>
+
+        </div>
+    </div>
+
+<script>
+  Prism.highlightAll();
+</script>
+
+</body>
+</html>

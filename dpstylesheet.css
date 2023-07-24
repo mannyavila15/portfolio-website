@@ -1,0 +1,202 @@
+body {
+    margin: 0 auto;
+    padding: 0;
+  }
+
+#home-title,
+#passion-title, #background-title, #contact_title, #study_abroad, #languages {
+    display: block;
+    font-size: 70px;
+    font-family: Georgia;
+    text-align: center;
+    opacity: 0;
+    animation: fade-in-animation 1s ease-in-out forwards;
+    padding-top: 100px;
+}
+
+@keyframes fade-in-animation {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+
+#introduction {
+    position: relative;
+    top: 40px;
+}
+
+.greeting p,
+.sample-pictures p,
+.about-me p, .abroadpics p, ol {
+    text-align: center;
+    font-family: 'Trebuchet MS';
+    line-height: 2;
+    opacity: 0;
+    animation: fade-in-animation 1s ease-in-out forwards;
+    margin-bottom: 30px;
+    margin-left: 150px;
+    margin-right: 150px;
+}
+
+.greeting {
+    margin: 0 auto;
+    display: block;
+    width: fit-content;
+    margin-top: 100px;
+    background-color: rgba(154, 148, 148, 0.228);
+    animation: fade-in-animation 1s ease-in-out forwards;
+}
+
+h3 {
+    display: block;
+    font-family: 'Trebuchet MS';
+    margin-left: 100px;
+    margin-bottom: 40px;
+}
+
+.about-me img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 15px;
+    height: auto;
+}
+
+.sample-pictures img {
+    position: relative;
+    border-radius: 30px;
+    transition: opacity 1s;
+    margin-left: 10px;
+    margin-right: 10px;
+    z-index: 0;
+}
+
+.sample-pictures-container{
+    display: flex;
+    justify-content: center;
+}
+
+.sample-pictures img:hover {
+    opacity: 0.3;
+    z-index: -1;
+}
+
+p {
+    font-size: 20px;
+    padding: 20px 40px;
+}
+
+#toolbar {
+    display: block;
+    position: fixed;
+    width: 100%;
+    background-color: white;
+    top: 0;
+    text-align: justify;
+    z-index: 1;
+}
+
+#toolbar span, #chineseproverb {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 24px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.toolleft  {
+    float: left;
+    margin-left: 30px;
+}
+
+.toolright {
+    float: right;
+    margin-right: 30px;
+}
+
+#toolbar a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#contact_info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.contact_circle {
+    position: relative;
+    margin: 20px;
+    width: 30%;
+    height: 400px;
+    border-radius: 50%;
+    background-color: rgba(154, 148, 148, 0.48);
+}
+
+.contact_circle p {
+    flex: 1;
+    text-align: center;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 30px;
+}
+
+.contact_circle #emailtext {
+    font-size: 20px;
+}
+
+.linkedinlogo {
+    height: 150px;
+    width: 150px;
+    margin-left: 130px;
+}
+
+.abroad_slideshow {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+.abroadpics {
+    display: flex;
+    width: calc(100% * 5); /* Adjust the number based on the total number of images */
+    animation: slide 20s linear infinite; /* Adjust duration and timing as needed */
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-100% - 10px * 4)); /* Account for spacing and number of images */
+}
+}
+
+.abroadpics img {
+    max-width: 800px; /* Adjust as needed */
+    max-height: 600px;
+    object-fit: contain;
+    margin-right: 0.000001px;
+    margin-bottom: 50px;
+}
+
+.abroadpics img:last-child {
+margin-right: 0; /* Remove margin on the last image to avoid extra spacing */
+}
+
+#projects h2 {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 30px;
+}
+
+#projects p {
+    font-family: 'Trebuchet MS';
+    font-size: 20px;
+}
+
