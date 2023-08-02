@@ -37,6 +37,12 @@
             <h2>MATLAB</h2>
 
             <pre><code class="language-matlab">
+                % This is a snippet of code from a project I developed to determine whether there was a significant correlation between any two random variables within the
+                % "National Health and Nutrition Examination Survey" collected by the CDC and drawn from their website. If you try running this code, it will not work because
+                % you do not have the data files on your computer, but this is just an example of me using multiple table-manipulation variables in MATLAB to analyze data extracted
+                % from an Excel file. I also employ a t-test at the end to determine the statistical correlation between BMI and RBC count, calling an inverse cumulative distribution 
+                % function to get the critical values. 
+
                 biochemistry = xptread('BIOPRO_H.XPT');
                 body_measures = xptread('BMX_H.XPT');
                 blood_cell_count = xptread('CBC_H.XPT');
@@ -84,7 +90,7 @@
                 # I have included snippets of code from the experiment I created while working with the research team at Vanderbilt, which I mentioned in the 'About Me' section of my webpage
                 # in this example, you can see all the imports at the beginning of my code, which I completed with the help of Psychopy, a tool that makes it easier to create
                 # timed audio/visual stimuli. Right under all of the imports, you can see an LSL pipeline that I established to send triggers to the EEG system, which would give 
-                # us an idea as to when, in time, the participant responded to the stimuli presented. 
+                # the research team and I an idea as to when, in time, the participant responded to the stimuli presented. 
 
                 from psychopy import locale_setup
                 from psychopy import prefs
@@ -261,9 +267,17 @@
                 <p>Below is an animation of a syringe pump prototype that I developed with a team using SOLIDWORKS. </p>
                     <div class="syringevideo">
                         <video autoplay loop muted>
-                            <source src="images/assembledsyringe.mp4" type="video/mp4">
+                            <source src="./assembledsyringe.mp4" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
+                    </div>
+                <br>
+                <p>Below are some examples of me using features such as linear/circular patterns, chamfers, fillets, cut extrusions
+                    and several more. </p>
+                    <div class="solidworks">
+                        <img src="wormgear.png" alt="Worm Gear">
+                        <img src="hand.png" alt="Prosthetic Hand">
+                        <img src="disc.png" alt="Slotted Disc">
                     </div>
         </div>
         <div class="myprojects">

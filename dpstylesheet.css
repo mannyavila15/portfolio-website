@@ -155,7 +155,7 @@ p {
     margin-left: 130px;
 }
 
-.abroad_slideshow {
+.abroad_slideshow, .myprojects {
     width: 100%;
     overflow: hidden;
   }
@@ -171,11 +171,11 @@ p {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(calc(-100% - 10px * 4)); /* Account for spacing and number of images */
+        transform: translateX(calc(-100% - (10px * 4))); /* Account for spacing and number of images */
 }
 }
 
-.abroadpics img {
+.abroadpics img  {
     max-width: 800px; /* Adjust as needed */
     max-height: 600px;
     object-fit: contain;
@@ -183,7 +183,39 @@ p {
     margin-bottom: 50px;
 }
 
-.abroadpics img:last-child {
+.solidworks {
+    display: flex;
+    width: calc(100% * 3); /* Adjust the number based on the total number of images */
+    animation: slide 20s linear infinite; /* Adjust duration and timing as needed */
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-100% - (10px * 4))); /* Account for spacing and number of images */
+}
+}
+
+.solidworks img {
+    max-width: 800px; /* Adjust as needed */
+    max-height: 600px;
+    object-fit: contain;
+    margin-right: 500px;
+    margin-top: 60px;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-100% - (10px * 2))); /* Account for spacing and number of images */
+}
+}
+
+.abroadpics img:last-child, .solidworks img:last-child {
 margin-right: 0; /* Remove margin on the last image to avoid extra spacing */
 }
 
